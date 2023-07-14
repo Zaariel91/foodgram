@@ -1,0 +1,197 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: db
+    labels:
+        name: postgres-service
+        app: foodgram
+spec:
+    ports:
+        - port: 5432
+          targetPort: 5432
+    selector:
+        name: postgres-pod
+        app: foodgram
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: postgres-deploy
+    labels:
+        name: postgres-deploy
+        app: foodgram
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+          name: postgres-pod
+          app: foodgram
+    template:
+      metadata:
+          name: postgres-pod
+          labels:
+              name: postgres-pod
+              app: foodgram
+      spec:
+          containers:
+              - name: postgres
+                image: postgres
+                ports:
+                    - containerPort: 5432
+                env:
+                    - name: POSTGRES_USER
+                      value: "postgres"
+                    - name: POSTGRES_PASSWORD
+                      value: "postgres"
+                    - name: POSTGRES_HOST_AUTH_METHOD
+                      value: trust
+---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#     name: nginx
+#     labels:
+#         name: nginx-service
+#         app: foodgram
+# spec:
+#     ports:
+#         - port: 80
+#           targetPort: 80
+#     selector:
+#         name: nginx-pod
+#         app: foodgram
+# ---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#     name: nginx-deploy
+#     labels:
+#         name: nginx-deploy
+#         app: foodgram
+# spec:
+#     replicas: 1
+#     selector:
+#         matchLabels:
+#           name: nginx-pod
+#           app: demo-voting-app
+#     template:
+#       metadata:
+#           name: nginx-pod
+#           labels:
+#               name: nginx-pod
+#               app: foodgram
+#       spec:
+#           containers:
+#               - name: nginx
+#                 image: nginx
+#                 ports:
+#                     - containerPort: 80
+---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: result-service
+#   labels:
+#     name: result-service
+#     app: demo-result-app
+# spec:
+#   type: LoadBalancer
+#   ports:
+#   - port: 80
+#     targetPort: 80
+#   selector:
+#      name: result-app-pod
+#      app: demo-voting-app
+---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#     name: result-deploy
+#     labels:
+#         name: result-deploy
+#         app: demo-voting-app
+# spec:
+#     replicas: 1
+#     selector:
+#         matchLabels:
+#           name: result-app-pod
+#           app: demo-voting-app
+#     template:
+#       metadata:
+#           name: result-app-pod
+#           labels:
+#               name: result-app-pod
+#               app: demo-voting-app
+#       spec:
+#           containers:
+#               - name: result-app
+#                 image: dockersamples/examplevotingapp_result
+#                 ports:
+#                     - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  labels:
+    name: backend-service
+    app: foodgram
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  type: LoadBalancer
+  selector:
+     name: backend-pod
+     app: foodgram
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: backend-deploy
+    labels:
+        name: backend-deploy
+        app: foodgram
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+          name: backend-pod
+          app: foodgram 
+    template:
+      metadata:
+          name: backend-pod
+          labels:
+              name: backend-pod
+              app: foodgram
+      spec:
+          containers:
+              - name: backend
+                image: zaariel91/foodgram_backend
+                ports:
+                    - containerPort: 80
+---
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#     name: worker-deploy
+#     labels:
+#         name: worker-deploy
+#         app: demo-voting-app
+# spec:
+#     replicas: 1
+#     selector:
+#         matchLabels:
+#           name: worker-app-pod
+#           app: demo-voting-app
+#     template:
+#       metadata:
+#           name: worker-app-pod
+#           labels:
+#               name: worker-app-pod
+#               app: demo-voting-app
+#       spec:
+#           containers:
+#               - name: worker-app
+#                 image: dockersamples/examplevotingapp_worker
