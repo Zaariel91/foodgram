@@ -133,9 +133,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend-service
+  name: foodgram-backend-service
   labels:
-    name: backend-service
+    name: foodgram-backend-service
     app: foodgram
 spec:
   ports:
@@ -143,7 +143,7 @@ spec:
     targetPort: 80
   type: LoadBalancer
   selector:
-     name: backend-pod
+     name: foodgram-backend-pod
      app: foodgram
 ---
 apiVersion: apps/v1
