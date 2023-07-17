@@ -47,88 +47,88 @@ spec:
                     - name: POSTGRES_HOST_AUTH_METHOD
                       value: trust
 ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#     name: nginx
-#     labels:
-#         name: nginx-service
-#         app: foodgram
-# spec:
-#     ports:
-#         - port: 80
-#           targetPort: 80
-#     selector:
-#         name: nginx-pod
-#         app: foodgram
-# ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#     name: nginx-deploy
-#     labels:
-#         name: nginx-deploy
-#         app: foodgram
-# spec:
-#     replicas: 1
-#     selector:
-#         matchLabels:
-#           name: nginx-pod
-#           app: demo-voting-app
-#     template:
-#       metadata:
-#           name: nginx-pod
-#           labels:
-#               name: nginx-pod
-#               app: foodgram
-#       spec:
-#           containers:
-#               - name: nginx
-#                 image: nginx
-#                 ports:
-#                     - containerPort: 80
+apiVersion: v1
+kind: Service
+metadata:
+    name: nginx
+    labels:
+        name: nginx-service
+        app: foodgram
+spec:
+    ports:
+        - port: 80
+          targetPort: 80
+    selector:
+        name: nginx-pod
+        app: foodgram
 ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: result-service
-#   labels:
-#     name: result-service
-#     app: demo-result-app
-# spec:
-#   type: LoadBalancer
-#   ports:
-#   - port: 80
-#     targetPort: 80
-#   selector:
-#      name: result-app-pod
-#      app: demo-voting-app
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: nginx-deploy
+    labels:
+        name: nginx-deploy
+        app: foodgram
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+          name: nginx-pod
+          app: demo-voting-app
+    template:
+      metadata:
+          name: nginx-pod
+          labels:
+              name: nginx-pod
+              app: foodgram
+      spec:
+          containers:
+              - name: nginx
+                image: nginx
+                ports:
+                    - containerPort: 80
 ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#     name: result-deploy
-#     labels:
-#         name: result-deploy
-#         app: demo-voting-app
-# spec:
-#     replicas: 1
-#     selector:
-#         matchLabels:
-#           name: result-app-pod
-#           app: demo-voting-app
-#     template:
-#       metadata:
-#           name: result-app-pod
-#           labels:
-#               name: result-app-pod
-#               app: demo-voting-app
-#       spec:
-#           containers:
-#               - name: result-app
-#                 image: dockersamples/examplevotingapp_result
-#                 ports:
-#                     - containerPort: 80
+apiVersion: v1
+kind: Service
+metadata:
+  name: foodgram-frontend-service
+  labels:
+    name: foodgram-frontend-service
+    app: foodgram
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  type: LoadBalancer
+  selector:
+     name: foodgram-frontend-pod
+     app: foodgram
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: foodgram-frontend-deploy
+    labels:
+        name: foodgram-frontend-deploy
+        app: foodgram
+spec:
+    replicas: 1
+    selector:
+        matchLabels:
+          name: foodgram-frontend-pod
+          app: foodgram 
+    template:
+      metadata:
+          name: foodgram-frontend-pod
+          labels:
+              name: foodgram-frontend-pod
+              app: foodgram
+      spec:
+          containers:
+              - name: foodgram-frontend
+                image: zaariel91/foodgram_frontend
+                ports:
+                    - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
@@ -172,26 +172,3 @@ spec:
                 ports:
                     - containerPort: 80
 ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#     name: worker-deploy
-#     labels:
-#         name: worker-deploy
-#         app: demo-voting-app
-# spec:
-#     replicas: 1
-#     selector:
-#         matchLabels:
-#           name: worker-app-pod
-#           app: demo-voting-app
-#     template:
-#       metadata:
-#           name: worker-app-pod
-#           labels:
-#               name: worker-app-pod
-#               app: demo-voting-app
-#       spec:
-#           containers:
-#               - name: worker-app
-#                 image: dockersamples/examplevotingapp_worker
